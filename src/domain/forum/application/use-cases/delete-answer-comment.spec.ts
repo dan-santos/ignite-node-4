@@ -2,6 +2,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { InMemoryAnswerCommentsRepository } from '@/tests/repositories/in-memory-answer-comments-repository';
 import { DeleteAnswerCommentUseCase } from './delete-answer-comment';
 import { makeAnswerComment } from '@/tests/factories/make-answer-comment';
+import { ForbiddenError } from './errors/custom-errors';
 
 let answerCommentsRepository: InMemoryAnswerCommentsRepository;
 let sut: DeleteAnswerCommentUseCase;
@@ -42,11 +43,12 @@ describe('Delete comment on answer tests', () => {
     }, commentId);
     await answerCommentsRepository.create(fakeComment);
 
-    await expect(() => 
-      sut.execute({
-        authorId: 'unexistent-another-id',
-        commentId: commentId.toString(),
-      })
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      authorId: 'unexistent-another-id',
+      commentId: commentId.toString(),
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ForbiddenError);
   });
 });

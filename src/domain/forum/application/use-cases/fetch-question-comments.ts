@@ -1,14 +1,15 @@
 import { IQuestionCommentsRepository } from '@repositories/question-comments-repository';
 import { QuestionComment } from '@entities/question-comment';
+import { Either, right } from '@/core/either';
 
 interface FetchQuestionCommentsUseCaseRequest {
   page: number;
   questionId: string;
 }
 
-interface FetchQuestionCommentsUseCaseResponse {
+type FetchQuestionCommentsUseCaseResponse = Either<null, {
   comments: QuestionComment[];
-}
+}>
 
 export class FetchQuestionCommentsUseCase {
   constructor(
@@ -18,8 +19,6 @@ export class FetchQuestionCommentsUseCase {
     Promise<FetchQuestionCommentsUseCaseResponse> {
     const comments = await this.questionCommentsRepository.findManyByQuestionId(questionId, { page });
 
-    return {
-      comments,
-    };
+    return right({ comments });
   }
 }

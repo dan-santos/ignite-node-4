@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src --ext .ts",
-    "test": "vitest run --dir src/domain --reporter verbose",
+    "test": "vitest run --reporter verbose",
     "test:watch": "vitest --dir src/domain",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",

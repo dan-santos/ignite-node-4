@@ -2,6 +2,7 @@ import { InMemoryAnswersRepository } from '@/tests/repositories/in-memory-answer
 import { makeAnswer } from '@/tests/factories/make-answer';
 import { DeleteAnswerUseCase } from './delete-answer';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { ForbiddenError } from './errors/custom-errors';
 
 let repository: InMemoryAnswersRepository;
 let sut: DeleteAnswerUseCase;
@@ -34,11 +35,12 @@ describe('Delete answer tests', () => {
     const fakeAnswer = makeAnswer({ authorId }, answerId);
     await repository.create(fakeAnswer);
 
-    await expect(() =>
-      sut.execute({
-        answerId: answerId.toString(),
-        authorId: 'unexistent-author-id'
-      })
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      answerId: answerId.toString(),
+      authorId: 'unexistent-author-id'
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ForbiddenError);
   });
 });

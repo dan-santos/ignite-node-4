@@ -19,10 +19,12 @@ describe('Get question by slug tests', () => {
 
     await repository.create(fakeQuestion);
     
-    const { question } = await sut.execute({ 
+    const result = await sut.execute({ 
       slug: 'example-question'
     });
 
-    expect(question.title).toEqual(fakeQuestion.title);
+    expect(result.isRight()).toBe(true);
+    
+    expect(result.value?.question.title).toEqual(fakeQuestion.title);
   });
 });

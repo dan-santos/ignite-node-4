@@ -17,9 +17,10 @@ describe('Fetch recent questions tests', () => {
       await repository.create(question);
     }
     
-    const { questions } = await sut.execute({ page: 2 });
+    const result = await sut.execute({ page: 2 });
 
-    expect(questions).toHaveLength(2);
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.questions).toHaveLength(2);
   });
 
   it('should be able to fetch ordered recent questions', async () => {
@@ -28,9 +29,10 @@ describe('Fetch recent questions tests', () => {
       await repository.create(question);
     }
     
-    const { questions } = await sut.execute({ page: 1 });
+    const result = await sut.execute({ page: 1 });
 
-    expect(questions).toEqual([
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.questions).toEqual([
       expect.objectContaining({ createdAt: new Date(2023, 9, 3) }),
       expect.objectContaining({ createdAt: new Date(2023, 9, 2) }),
       expect.objectContaining({ createdAt: new Date(2023, 9, 1) }),

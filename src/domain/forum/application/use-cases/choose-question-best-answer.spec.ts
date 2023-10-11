@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { InMemoryQuestionsRepository } from '@/tests/repositories/in-memory-questions-repository';
 import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer';
 import { makeQuestion } from '@/tests/factories/make-question';
+import { ForbiddenError } from './errors/custom-errors';
 
 let answersRepository: InMemoryAnswersRepository;
 let questionsRepository: InMemoryQuestionsRepository;
@@ -62,11 +63,11 @@ describe('Choose question best answer tests', () => {
     );
     await answersRepository.create(fakeAnswer);
 
-    await expect(() => 
-      sut.execute({
-        answerId: answerId.toString(),
-        authorId: 'unexistent-student-id'
-      })
-    ).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      answerId: answerId.toString(),
+      authorId: 'unexistent-student-id'
+    });
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ForbiddenError);
   });
 });

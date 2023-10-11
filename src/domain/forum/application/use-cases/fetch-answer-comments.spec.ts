@@ -19,11 +19,12 @@ describe('Fetch answer comments tests', () => {
       await repository.create(makeAnswerComment({ answerId }));
     }
     
-    const { comments } = await sut.execute({ 
+    const result = await sut.execute({ 
       answerId: answerId.toString(), page: 2 
     });
 
-    expect(comments).toHaveLength(2);
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.comments).toHaveLength(2);
   });
 
   it('should be able to fetch answer comments', async () => {
@@ -33,10 +34,11 @@ describe('Fetch answer comments tests', () => {
       await repository.create(makeAnswerComment({ answerId }));
     }
     
-    const { comments } = await sut.execute({ 
-      answerId: answerId.toString(), page: 1 
+    const result = await sut.execute({ 
+      answerId: answerId.toString(), page: 1
     });
 
-    expect(comments).toHaveLength(4);
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.comments).toHaveLength(4);
   });
 });

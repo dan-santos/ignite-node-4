@@ -19,11 +19,12 @@ describe('Fetch question answers tests', () => {
       await repository.create(makeAnswer({ questionId }));
     }
     
-    const { answers } = await sut.execute({ 
+    const result = await sut.execute({ 
       questionId: questionId.toString(), page: 2 
     });
 
-    expect(answers).toHaveLength(2);
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.answers).toHaveLength(2);
   });
 
   it('should be able to fetch question answers', async () => {
@@ -33,10 +34,11 @@ describe('Fetch question answers tests', () => {
       await repository.create(makeAnswer({ questionId }));
     }
     
-    const { answers } = await sut.execute({ 
+    const result = await sut.execute({ 
       questionId: questionId.toString(), page: 1 
     });
 
-    expect(answers).toHaveLength(4);
+    expect(result.isRight()).toBe(true);
+    expect(result.value?.answers).toHaveLength(4);
   });
 });
