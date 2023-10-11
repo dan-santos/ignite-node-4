@@ -3,14 +3,18 @@ import { makeAnswer } from '@/tests/factories/make-answer';
 import { DeleteAnswerUseCase } from './delete-answer';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { ForbiddenError } from './errors/custom-errors';
+import { InMemoryAnswerAttachmentsRepository } from '@/tests/repositories/in-memory-answer-attachments-repository';
+import { makeAnswerAttachment } from '@/tests/factories/make-answer-attachment';
 
-let repository: InMemoryAnswersRepository;
+let answerRepository: InMemoryAnswersRepository;
+let attachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: DeleteAnswerUseCase;
 
 describe('Delete answer tests', () => {
   beforeEach(() => {
-    repository = new InMemoryAnswersRepository();
-    sut = new DeleteAnswerUseCase(repository);
+    attachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+    answerRepository = new InMemoryAnswersRepository(attachmentsRepository);
+    sut = new DeleteAnswerUseCase(answerRepository);
   });
 
   it('should be able to delete a answer', async () => {
@@ -18,14 +22,26 @@ describe('Delete answer tests', () => {
     const authorId = new UniqueEntityID();
 
     const fakeAnswer = makeAnswer({ authorId }, answerId);
-    await repository.create(fakeAnswer);
+    await answerRepository.create(fakeAnswer);
+
+    attachmentsRepository.items.push(
+      makeAnswerAttachment({
+        answerId: fakeAnswer.id,
+        attachmentId: new UniqueEntityID('1')
+      }),
+      makeAnswerAttachment({
+        answerId: fakeAnswer.id,
+        attachmentId: new UniqueEntityID('2')
+      })
+    );
 
     await sut.execute({
       answerId: answerId.toString(),
       authorId: authorId.toString()
     });
 
-    expect(repository.items).toHaveLength(0);
+    expect(answerRepository.items).toHaveLength(0);
+    expect(attachmentsRepository.items).toHaveLength(0);
   });
 
   it('should NOT be able to delete a answer from another user', async () => {
@@ -33,7 +49,7 @@ describe('Delete answer tests', () => {
     const authorId = new UniqueEntityID();
 
     const fakeAnswer = makeAnswer({ authorId }, answerId);
-    await repository.create(fakeAnswer);
+    await answerRepository.create(fakeAnswer);
 
     const result = await sut.execute({
       answerId: answerId.toString(),

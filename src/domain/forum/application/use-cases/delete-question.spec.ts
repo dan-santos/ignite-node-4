@@ -3,14 +3,18 @@ import { makeQuestion } from '@/tests/factories/make-question';
 import { DeleteQuestionUseCase } from './delete-question';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { ForbiddenError } from './errors/custom-errors';
+import { InMemoryQuestionAttachmentsRepository } from '@/tests/repositories/in-memory-question-attachments-repository';
+import { makeQuestionAttachment } from '@/tests/factories/make-question-attachment';
 
-let repository: InMemoryQuestionsRepository;
+let questionRepository: InMemoryQuestionsRepository;
+let attachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let sut: DeleteQuestionUseCase;
 
 describe('Delete question tests', () => {
   beforeEach(() => {
-    repository = new InMemoryQuestionsRepository();
-    sut = new DeleteQuestionUseCase(repository);
+    attachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+    questionRepository = new InMemoryQuestionsRepository(attachmentsRepository);
+    sut = new DeleteQuestionUseCase(questionRepository);
   });
 
   it('should be able to delete a question', async () => {
@@ -18,14 +22,26 @@ describe('Delete question tests', () => {
     const authorId = new UniqueEntityID();
 
     const fakeQuestion = makeQuestion({ authorId }, questionId);
-    await repository.create(fakeQuestion);
+    await questionRepository.create(fakeQuestion);
+
+    attachmentsRepository.items.push(
+      makeQuestionAttachment({
+        questionId: fakeQuestion.id,
+        attachmentId: new UniqueEntityID('1')
+      }),
+      makeQuestionAttachment({
+        questionId: fakeQuestion.id,
+        attachmentId: new UniqueEntityID('2')
+      })
+    );
 
     await sut.execute({
       questionId: questionId.toString(),
       authorId: authorId.toString()
     });
 
-    expect(repository.items).toHaveLength(0);
+    expect(attachmentsRepository.items).toHaveLength(0);
+    expect(questionRepository.items).toHaveLength(0);
   });
 
   it('should NOT be able to delete a question from another user', async () => {
@@ -33,7 +49,7 @@ describe('Delete question tests', () => {
     const authorId = new UniqueEntityID();
 
     const fakeQuestion = makeQuestion({ authorId }, questionId);
-    await repository.create(fakeQuestion);
+    await questionRepository.create(fakeQuestion);
 
     const result = await sut.execute({
       questionId: questionId.toString(),

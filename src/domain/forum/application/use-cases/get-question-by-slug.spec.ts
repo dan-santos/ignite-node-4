@@ -25,6 +25,10 @@ describe('Get question by slug tests', () => {
 
     expect(result.isRight()).toBe(true);
     
-    expect(result.value?.question.title).toEqual(fakeQuestion.title);
+    expect(result.value).toMatchObject({
+      question: expect.objectContaining({
+        title: fakeQuestion.title,
+      })
+    });
   });
 });
