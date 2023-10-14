@@ -2,6 +2,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params';
 import { IQuestionAttachmentsRepository } from '@repositories/question-attachments-repository';
 import { Question } from '@entities/question';
 import { IQuestionsRepository } from '@repositories/questions-repository';
+import { DomainEvents } from '@/core/events/domain-events';
 
 export class InMemoryQuestionsRepository implements IQuestionsRepository {
   private questions: Question[] = [];
@@ -16,6 +17,7 @@ export class InMemoryQuestionsRepository implements IQuestionsRepository {
 
   async create(question: Question): Promise<void> {
     this.questions.push(question);
+    DomainEvents.dispatchEventsForAggregate(question.id);
   }
 
   async findBySlug(slug: string) {
@@ -44,6 +46,7 @@ export class InMemoryQuestionsRepository implements IQuestionsRepository {
     const questionIndex = this.questions.findIndex(q => q.id === question.id);
 
     this.questions[questionIndex] = question;
+    DomainEvents.dispatchEventsForAggregate(question.id);
   }
 
   async findManyRecent(params: PaginationParams){

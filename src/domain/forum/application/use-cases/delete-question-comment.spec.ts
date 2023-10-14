@@ -2,7 +2,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { InMemoryQuestionCommentsRepository } from '@/tests/repositories/in-memory-question-comments-repository';
 import { DeleteQuestionCommentUseCase } from './delete-question-comment';
 import { makeQuestionComment } from '@/tests/factories/make-question-comment';
-import { ForbiddenError } from './errors/custom-errors';
+import { ForbiddenError } from '@/core/errors/custom-errors';
 
 let questionCommentsRepository: InMemoryQuestionCommentsRepository;
 let sut: DeleteQuestionCommentUseCase;

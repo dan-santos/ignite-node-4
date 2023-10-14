@@ -4,7 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { InMemoryQuestionsRepository } from '@/tests/repositories/in-memory-questions-repository';
 import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer';
 import { makeQuestion } from '@/tests/factories/make-question';
-import { ForbiddenError } from './errors/custom-errors';
+import { ForbiddenError } from '@/core/errors/custom-errors';
 
 let answersRepository: InMemoryAnswersRepository;
 let questionsRepository: InMemoryQuestionsRepository;

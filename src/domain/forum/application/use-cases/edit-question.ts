@@ -1,7 +1,7 @@
 import { Question } from '@entities/question';
 import { IQuestionsRepository } from '@repositories/questions-repository';
 import { Either, left, right } from '@/core/either';
-import { ForbiddenError, ResourceNotFoundError } from './errors/custom-errors';
+import { ForbiddenError, ResourceNotFoundError } from '@/core/errors/custom-errors';
 import { IQuestionAttachmentsRepository } from '@repositories/question-attachments-repository';
 import { QuestionAttachmentList } from '@entities/question-attachment-list';
 import { QuestionAttachment } from '@entities/question-attachment';

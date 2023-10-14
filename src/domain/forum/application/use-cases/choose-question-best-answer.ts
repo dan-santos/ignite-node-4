@@ -2,7 +2,7 @@ import { IAnswersRepository } from '@repositories/answers-repository';
 import { Question } from '@entities/question';
 import { IQuestionsRepository } from '@repositories/questions-repository';
 import { Either, left, right } from '@/core/either';
-import { ForbiddenError, ResourceNotFoundError } from './errors/custom-errors';
+import { ForbiddenError, ResourceNotFoundError } from '@/core/errors/custom-errors';
 
 interface ChooseQuestionBestAnswerUseCaseRequest {
   authorId: string;

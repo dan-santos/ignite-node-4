@@ -16,7 +16,6 @@ describe('Comment on answer tests', () => {
   });
 
   it('should be able to comment on answer', async () => {
-    console.log('teste - passei aqui');
     const answerId = new UniqueEntityID();
 
     const fakeAnswer = makeAnswer({}, answerId);

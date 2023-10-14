@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/core/either';
 import { IQuestionsRepository } from '@repositories/questions-repository';
-import { ForbiddenError, ResourceNotFoundError } from './errors/custom-errors';
+import { ForbiddenError, ResourceNotFoundError } from '@/core/errors/custom-errors';
 
 interface DeleteQuestionUseCaseRequest {
   questionId: string;

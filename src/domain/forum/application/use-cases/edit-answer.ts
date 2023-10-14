@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/core/either';
 import { Answer } from '@entities/answer';
 import { IAnswersRepository } from '@repositories/answers-repository';
-import { ForbiddenError, ResourceNotFoundError } from './errors/custom-errors';
+import { ForbiddenError, ResourceNotFoundError } from '@/core/errors/custom-errors';
 import { AnswerAttachmentList } from '@entities/answer-attachment-list';
 import { AnswerAttachment } from '@entities/answer-attachment';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';

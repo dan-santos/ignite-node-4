@@ -2,7 +2,7 @@ import { InMemoryQuestionsRepository } from '@/tests/repositories/in-memory-ques
 import { makeQuestion } from '@/tests/factories/make-question';
 import { DeleteQuestionUseCase } from './delete-question';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
-import { ForbiddenError } from './errors/custom-errors';
+import { ForbiddenError } from '@/core/errors/custom-errors';
 import { InMemoryQuestionAttachmentsRepository } from '@/tests/repositories/in-memory-question-attachments-repository';
 import { makeQuestionAttachment } from '@/tests/factories/make-question-attachment';
 

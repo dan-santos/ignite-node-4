@@ -2,6 +2,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params';
 import { IAnswerAttachmentsRepository } from '@repositories/answer-attachments-repository';
 import { Answer } from '@entities/answer';
 import { IAnswersRepository } from '@repositories/answers-repository';
+import { DomainEvents } from '@/core/events/domain-events';
 
 export class InMemoryAnswersRepository implements IAnswersRepository {
   private answers: Answer[] = [];
@@ -16,6 +17,7 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
 
   async create(answer: Answer): Promise<void> {
     this.answers.push(answer);
+    DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
   async findById(answerId: string){
@@ -36,6 +38,7 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     const answerIndex = this.answers.findIndex(q => q.id === answer.id);
 
     this.answers[answerIndex] = answer;
+    DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
   async findManyByQuestionId(questionId: string, params: PaginationParams): Promise<Answer[]> {
